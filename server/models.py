@@ -13,16 +13,18 @@ db = SQLAlchemy(metadata=metadata)
 
 class Hero(db.Model, SerializerMixin):
     __tablename__ = 'heroes'
+    #serialization rules
     serialize_rules=('-hero_powers.hero',)
     
+    #Table Columns
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     super_name = db.Column(db.String)
 
-    # add relationship
+    #Relationships
     hero_powers = db.relationship('HeroPower',back_populates='hero',cascade='all, delete-orphan')
     powers = association_proxy('hero_powers','power', creator=lambda power_obj:HeroPower(power=power_obj))
-    # add serialization rules
+    
 
     def __repr__(self):
         return f'<Hero {self.id}>'
@@ -30,20 +32,20 @@ class Hero(db.Model, SerializerMixin):
 
 class Power(db.Model, SerializerMixin):
     __tablename__ = 'powers'
-    # add serialization rules
+    # Serialization rules
     serialize_rules=('-hero_powers.power',)
     
-    
+    #Table Columns
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.String)
 
-    # add relationship
+    #Relationships
     hero_powers = db.relationship('HeroPower',back_populates='power',cascade='all, delete-orphan')
     heroes= association_proxy('hero_powers','hero', creator=lambda hero_obj:HeroPower(power=hero_obj))
     
 
-    # add validation
+    #Validation
     @validates('description')
     def validate_description(self,key,description):
         if len(description)<19 or not description:
@@ -55,20 +57,21 @@ class Power(db.Model, SerializerMixin):
 
 class HeroPower(db.Model, SerializerMixin):
     __tablename__ = 'hero_powers'
-    # add serialization rules
+    # Serialization rules
     serialize_rules=('-hero.hero_powers','-power.hero_powers')
     
+    #Table Columns
     id = db.Column(db.Integer, primary_key=True)
     strength = db.Column(db.String, nullable=False)
-
+    #Foregin Keys
     hero_id = db.Column(db.Integer,db.ForeignKey('heroes.id'))
     power_id = db.Column(db.Integer,db.ForeignKey('powers.id'))
     
-    # add relationships    
+    # Relationships    
     hero= db.relationship('Hero',back_populates='hero_powers')
     power= db.relationship('Power',back_populates='hero_powers')    
 
-    # add validation
+    # Validation
     @validates('strength')
     def validate_strength(self,key,strength):
         if strength not in ['Strong', 'Weak', 'Average']:
