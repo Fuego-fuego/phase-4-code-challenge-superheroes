@@ -1,37 +1,10 @@
-# Flask Code Challenge - Superheroes
+#  Superheroes API
+## Description
+This is an API for tracking heroes and their superpowers.
 
-For this assessment, you'll be working on an API for tracking heroes and their
-superpowers.
-
-In this repo:
-
-- There is a Flask application with some features built out.
-- There is a fully built React frontend application.
-- There are tests included which you can run using `pytest -x`.
-- There is a file `challenge-2-superheroes.postman_collection.json` that
-  contains a Postman collection of requests for testing each route you will
-  implement.
-
-Depending on your preference, you can either check your API by:
-
-- Using Postman to make requests
-- Running `pytest -x` and seeing if your code passes the tests
-- Running the React application in the browser and interacting with the API via
-  the frontend
-
-You can import `challenge-2-superheroes.postman_collection.json` into Postman by
-pressing the `Import` button.
-
-![import postman](https://curriculum-content.s3.amazonaws.com/6130/phase-4-code-challenge-instructions/import_collection.png)
-
-Select `Upload Files`, navigate to this repo folder, and select
-`challenge-2-superheroes.postman_collection.json` as the file to import.
+All the responses are return in JSON data format
 
 ## Setup
-
-The instructions assume you changed into the `code-challenge` folder **prior**
-to opening the code editor.
-
 To download the dependencies for the frontend and backend, run:
 
 ```console
@@ -54,73 +27,22 @@ running:
 npm start --prefix client
 ```
 
-You are not being assessed on React, and you don't have to update any of the
-React code; the frontend code is available just so that you can test out the
-behavior of your API in a realistic setting.
+- There are tests included which you can run using `pytest -x`.
+- There is a file `challenge-2-superheroes.postman_collection.json` that
+  contains a Postman collection of requests for testing each route you will
+  implement.
 
-Your job is to build out the Flask API to add the functionality described in the
-deliverables below.
+
 
 ## Models
-
-You will implement an API for the following data model:
-
-![domain diagram](https://curriculum-content.s3.amazonaws.com/6130/code-challenge-2/domain.png)
-
-The file `server/models.py` defines the model classes **without relationships**.
-Use the following commands to create the initial database `app.db`:
-
-```console
-export FLASK_APP=server/app.py
-flask db init
-flask db upgrade head
-```
-
-Now you can implement the relationships as shown in the ER Diagram:
+ The model classes are related in this way.
 
 - A `Hero` has many `Power`s through `HeroPower`
 - A `Power` has many `Hero`s through `HeroPower`
 - A `HeroPower` belongs to a `Hero` and belongs to a `Power`
 
-Update `server/models.py` to establish the model relationships. Since a
-`HeroPower` belongs to a `Hero` and a `Power`, configure the model to cascade
-deletes.
-
-Set serialization rules to limit the recursion depth.
-
-Run the migrations and seed the database:
-
-```console
-flask db revision --autogenerate -m 'message'
-flask db upgrade head
-python server/seed.py
-```
-
-> If you aren't able to get the provided seed file working, you are welcome to
-> generate your own seed data to test the application.
-
-## Validations
-
-Add validations to the `HeroPower` model:
-
-- `strength` must be one of the following values: 'Strong', 'Weak', 'Average'
-
-Add validations to the `Power` model:
-
-- `description` must be present and at least 20 characters long
 
 ## Routes
-
-Set up the following routes. Make sure to return JSON data in the format
-specified along with the appropriate HTTP verb.
-
-Recall you can specify fields to include or exclude when serializing a model
-instance to a dictionary using to_dict() (don't forget the comma if specifying a
-single field).
-
-NOTE: If you choose to implement a Flask-RESTful app, you need to add code to
-instantiate the `Api` class in server/app.py.
-
 ### GET /heroes
 
 Return JSON data in the format below:
